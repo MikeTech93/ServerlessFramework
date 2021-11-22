@@ -1,0 +1,32 @@
+## Please note the plugins need to be installed into the SimpleS3Upload directory manually e.g.
+## npm install --save serverless-s3-sync
+
+service: simples3upload
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  profile: playground
+  region: eu-west-1
+
+plugins:
+  - serverless-s3-sync
+
+custom:
+  s3Sync:
+    - bucketName: myserverlessdemobucketupload-145644789
+      localDir: UploadData
+
+#functions:
+#  hello:
+#    handler: handler.hello
+
+resources:
+  Resources:
+    DemoBucketUpload:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: myserverlessdemobucketupload-145644789

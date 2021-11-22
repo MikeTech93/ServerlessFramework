@@ -1,0 +1,19 @@
+service: lambdaandapigateway
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  profile: playground
+  region: eu-west-1
+
+functions:
+  getuser:
+    handler: lambdas/getUser.handler
+    events:
+      - http:
+          path: get-user/{ID}
+          method: GET
+          cors: true
