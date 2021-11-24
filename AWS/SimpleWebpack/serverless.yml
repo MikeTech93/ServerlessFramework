@@ -1,7 +1,4 @@
-## Please note the plugins need to be installed into the SimpleS3Upload directory manually e.g.
-## npm install --save serverless-s3-sync
-
-service: simples3upload
+service: simplewebpack
 
 frameworkVersion: '2'
 
@@ -14,6 +11,10 @@ provider:
 
 plugins:
   - serverless-s3-sync
+  - serverless-webpack
+
+package:
+  individually: true
 
 custom:
   s3Sync:
@@ -26,3 +27,12 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: myserverlessdemobucketupload-145644789
+
+functions:
+  getuser:
+    handler: lambdas/getUser.handler
+    events:
+      - http:
+          path: get-user/{ID}
+          method: GET
+          cors: true
