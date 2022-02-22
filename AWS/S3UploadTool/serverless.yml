@@ -1,0 +1,51 @@
+service: S3UploadTool
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  profile: playground
+  region: eu-west-1
+  environment:
+    bucketName: ${self:custom.bucketName}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource: '*'
+  
+plugins:
+  - serverless-webpack
+
+package:
+  individually: true
+
+custom:
+  bucketName: myserverlessdemobucketupload-14564478945165789
+  s3Sync:
+    - bucketName: ${self:custom.bucketName}
+
+resources:
+  Resources:
+    ExampleBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.bucketName}
+
+functions:
+  getFile:
+    handler: lambdas/endpoints/getFile.handler
+    events:
+      - http:
+          path: get-file/{fileName}
+          method: GET
+          cors: true
+  createFile:
+    handler: lambdas/endpoints/createFile.handler
+    events:
+      - http:
+          path: create-file/{fileName}
+          method: POST
+          cors: true
