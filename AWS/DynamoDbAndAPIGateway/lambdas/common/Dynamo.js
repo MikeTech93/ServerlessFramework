@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk');
 const documentClient = new AWS.DynamoDB.DocumentClient();
 const Dynamo = {
+    
     async get (ID, TableName){
         const params = {
             TableName,
@@ -19,8 +20,26 @@ const Dynamo = {
         console.log(data);
 
         return data.Item;
-    }
+    },
 
+    async write (data, TableName) {
+        if (!data.ID){
+            throw error('no ID on the data')
+        }
+
+        const params = {
+            TableName,
+            Item: data
+        };
+
+        const res = await documentClient.put(params).promise()
+
+        if (!res) {
+            throw error(`There was an error inserting ID of ${data.ID} in table ${TableName}`)
+        }
+
+        return data;
+    }
 };
 
 module.exports = Dynamo

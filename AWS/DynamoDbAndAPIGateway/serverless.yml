@@ -24,9 +24,6 @@ package:
 
 custom:
   tableName: player-points
-  s3Sync:
-    - bucketName: myserverlessdemobucketupload-145644789
-      localDir: UploadData
 
 resources:
   Resources:
@@ -49,5 +46,12 @@ functions:
       - http:
           path: get-player-score/{ID}
           method: GET
+          cors: true
+  createPlayerScore:
+    handler: lambdas/endpoints/createPlayerScore.handler
+    events:
+      - http:
+          path: create-player-score/{ID}
+          method: POST
           cors: true
     
