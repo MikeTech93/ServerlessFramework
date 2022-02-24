@@ -2,7 +2,9 @@
 
 This is a repository to contain templates for using the Serverless Framework to build infrastructure. 
 
-The initial scripts will be solely tested on AWS infrastructure however at a later point they may be converted to be multi cloud and this README will be updated to reflect that. 
+The initial scripts will be solely tested on AWS infrastructure however at a later point they may be converted to be multi cloud and this README will be updated to reflect that.
+
+At the time of writing this the templates were designed to be ran in Serverless 2.0 - The release of 3.0 is just around the corner so please bare in mind there may be some slight changes if you want to run this on 3.0
 
 ## Authenticating to AWS
 Credentials to authenticate to an AWS account will be stored in an AWS CLI profile called "playground".
@@ -30,16 +32,20 @@ You can find out more information about using AWS credentials within your server
 
     cd .\AWS\SimpleLambdaAndAPIGateway\
 
-4. Deploy the infrastructure in AWS
+4. install node modules
+
+    npm install
+
+5. Deploy the infrastructure in AWS
 
     serverless deploy
 
-5. The CLI output should show an endpoint which you can copy and paste into your browser to return the following message:
+6. The CLI output should show an endpoint which you can copy and paste into your browser to return the following message:
 
     "message": "Go Serverless v1.0! Your function executed successfully!"
 
-6. You can also check in Cloud Formation, API Gateway & Lambda Function to check its been deployed successfully 
+7. You can also check in Cloud Formation, API Gateway & Lambda Function to check its been deployed successfully 
 
-7. Once you're happy its working then you can remove the infrastructure
+8. Once you're happy its working then you can remove the infrastructure
 
     serverless remove
