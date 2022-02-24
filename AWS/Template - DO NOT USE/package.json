@@ -1,9 +1,0 @@
-{
-  "devDependencies": {
-    "serverless-s3-sync": "^1.17.3"
-  },
-  "dependencies": {
-    "serverless-webpack": "^5.6.0",
-    "webpack": "^5.64.3"
-  }
-}
