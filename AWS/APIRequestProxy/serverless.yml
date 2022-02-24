@@ -1,0 +1,31 @@
+service: APIRequestProxy
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  profile: playground
+  region: eu-west-1
+  
+plugins:
+  - serverless-webpack
+
+package:
+  individually: true
+
+functions:
+  proxy:
+    handler: lambdas/endpoints/proxy.handler
+    events:
+      - http:
+          path: chuck-norris/{proxy+}
+          method: ANY
+          integration: http-proxy
+          request:
+            uri: http://api.icndb.com/{proxy}
+            parameters:
+              paths:
+                proxy: true
+    
