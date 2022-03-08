@@ -1,3 +1,7 @@
+# MANUAL STEPS
+# lambda needs IAM access to the ssm.sendmessage on the ec2 instance in question
+# ensure aws CLI & SSM are installed on the destination and added to the PATH e.g. you can run aws --version from powershell
+
 service: S3toEC2Copy
 
 frameworkVersion: '2'
@@ -9,7 +13,8 @@ package:
   individually: true
 
 custom:
-  bucketName: myserverlessdemobucket-123
+  # Ensure to set this to a non real bucket before checking the code back into the repo as the repo is public
+  bucketName: myserverlessdemobucket123
 
 provider:
   name: aws
@@ -27,7 +32,7 @@ provider:
 
 functions:
   gets3Object:
-    handler: lambdas/endpoints/getS3Object.handler
+    handler: lambdas/getS3Object.handler
     events:
       - s3:
           bucket: ${self:custom.bucketName}
@@ -35,5 +40,5 @@ functions:
           rules:
             - prefix: uploads/
             - suffix: .jpg
-          # uncomment if bucket is not managed by serverless
+          # uncomment if bucket is not managed by serverless e.g. the bucket was manually created
           #existing: true

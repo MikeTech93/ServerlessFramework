@@ -1,11 +1,8 @@
-// MANUAL STEPS
-
-// lambda needs IAM access to the ssm.sendmessage on the ec2 instance in question
-// ensure aws CLI is installed on the destination and added to the PATH e.g. you can run aws --version from powershell
-
 const AWS = require('aws-sdk');
 const S3 = new AWS.S3({apiVersion: '2006-03-01'});
 const SSM = new AWS.SSM({region:'eu-west-1'});
+
+// Ensure to set the instanceIDs to a fake value before checking the code back into the repo as the repo is public
 const instanceIds = ['i-xxx'];
 const localDir = "c:\\temp";
 
@@ -28,6 +25,13 @@ function sendCommands(instanceIdList, Command) {
       });
     });
   };
+
+// Create function to clean the key to ensure that malicous code injection can not occur on the EC2 instance
+function cleanKey(key){
+  const a = key.replace(/[&\\#,+()$~%'":*?<>{}]/g, '');
+	// Add in further logic here dependant on what files you are expecting to be uplaoded
+  console.log(a);
+};
 
 // Start Lambda Function Here
 exports.handler = async (event, context) => {
@@ -56,7 +60,8 @@ exports.handler = async (event, context) => {
     };
 
     // Generate the command to be sent to the EC2 Instance
-    const COMMAND = `aws s3 cp s3://${bucket}/${key} ${localDir}`;
+    newKey = cleanKey(key)
+    const COMMAND = `aws s3 cp s3://${bucket}/${newKey} ${localDir}`;
     
     // Send the command to the EC2 Instance
     try {
@@ -68,5 +73,7 @@ exports.handler = async (event, context) => {
         const message = `Issue sending command to ${instanceIds}`;
         console.log(message);
     }
+
+    // Need to add in code to check the command completed without failures - but this is just a template to get you started!
 
 };
