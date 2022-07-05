@@ -1,0 +1,90 @@
+service: WebSocketAPIGateway
+
+frameworkVersion: '2'
+
+plugins:
+  - serverless-plugin-common-excludes
+  - serverless-plugin-include-dependencies
+  - '@anttiviljami/serverless-stack-output'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+  profile: playground
+  region: eu-west-1
+
+  environment:
+    APIG_ENDPOINT:
+      Fn::Join:
+        - ''
+        - - Ref: WebsocketsApi
+          - .execute-api.
+          - Ref: AWS::Region
+          - .amazonaws.com/
+          - ${self:custom.stage}
+    CONNECTIONS_TABLE:
+      Ref: ConnectionsTable
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DeleteItem
+        - dynamodb:GetItem
+        - dynamodb:Scan
+        - dynamodb:PutItem
+      Resource:
+        Fn::GetAtt:
+          - ConnectionsTable
+          - Arn
+
+custom:
+  #output:
+    #file: ./client/data.json
+  stage: ${opt:stage, 'dev'}
+
+functions:
+  authorizer:
+    handler: lambdas/authorizer.handler
+
+  broadcast:
+    handler: lambdas/broadcast.handler
+
+  websocket:
+    handler: lambdas/websocket.handler
+    events:
+      - websocket:
+          # Handles new connection requests
+          route: $connect
+          # Only the '$connect' route supports an authorizer. The other routes
+          # are secured via the connection ID and therefore it should be handled like a session ID.
+          authorizer:
+            name: authorizer
+            identitySource:
+              - 'route.request.header.X-Forwarded-Proto'
+
+      - websocket:
+          # Handles all unrouted messages
+          route: $default
+
+      - websocket:
+          # Handles disconnect messages
+          route: $disconnect
+
+resources:
+  Resources:
+    ConnectionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: connectionId
+            AttributeType: S
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: connectionId
+            KeyType: HASH
+        SSESpecification:
+          SSEEnabled: true
+        TimeToLiveSpecification:
+          AttributeName: ttl
+          Enabled: true

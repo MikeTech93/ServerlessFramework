@@ -1,0 +1,26 @@
+{
+  "name": "serverless-websocket-example",
+  "version": "0.0.1",
+  "description": "WebSocket example using the Serverless Framework.",
+  "devDependencies": {
+    "@anttiviljami/serverless-stack-output": "^0.3.1",
+    "http-server": "^0.12.3",
+    "serverless": "^2.33.1",
+    "serverless-plugin-common-excludes": "^3.0.1",
+    "serverless-plugin-include-dependencies": "^4.1.0",
+    "serverless-stack-output": "^0.2.3"
+  },
+  "scripts": {
+    "broadcast": "sls invoke --function broadcast --data '{ \"body\": \"This is a test broadcast message\" }'",
+    "sls": "sls",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "keywords": [
+    "serverless",
+    "serverless framework",
+    "websocket"
+  ]
+}
