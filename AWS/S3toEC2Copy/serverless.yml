@@ -1,6 +1,7 @@
 # MANUAL STEPS
-# lambda needs IAM access to the ssm.sendmessage on the ec2 instance in question
-# ensure aws CLI & SSM are installed on the destination and added to the PATH e.g. you can run aws --version from powershell
+# The created Lambda needs IAM access to the ssm.sendmessage on the ec2 instance in question
+# Ensure SSM is installed on the device 
+# Ensure AWS CLI is installed and added to the PATH e.g. you can run aws --version from powershell and it will return the version
 
 service: S3toEC2Copy
 
